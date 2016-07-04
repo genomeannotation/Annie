@@ -45,13 +45,14 @@ def get_fasta_info(fasta_file):
             while words[i].find("OS=") == -1: 
                 i += 1
             product = " ".join(words[1:i])
-            #loop through the words till we find "GN=" or "PE=". We are assuming "PE=" comes immediately after "GN=" so if we hit "PE=" first, then the gene name doesn't exist. We also assume the gene name is one word
-            while (words[i].find("GN=") == -1 and words[i].find("PE=") == -1) and (i+1 < len(words)):
+            #loop through the words till we find "GN=" or reach the end of the line
+            while (words[i].find("GN=") == -1 ) and (i+1 < len(words)):
                 i += 1
             if not words[i].find("GN=") == -1: #if gene name exists
                 name = words[i][3:] #the "[3:]" is to get rid of the "GN=" in the beginning
-            else: #if gene name doesn't exist, use part of the dbxref for the name
-                name = ref.split("|")[2].split("_")[0]
+		name=name.rstrip()
+	    else: #if gene name doesn't exist, use part of the dbxref for the name
+		name = ref.split("|")[2].split("_")[0]
             #add to dictionary
             dbxrefs[ref] = (product,name)
     return dbxrefs
